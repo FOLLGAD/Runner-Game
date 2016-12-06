@@ -21,6 +21,8 @@ let lastDate,
       jumpTimer: 0,
       onGround: true
     };
+let map = {};
+map.height = 1200;
 
 const images = {};
 images.emil = new Image();
@@ -76,8 +78,8 @@ function Tick() {
   runner.x += runner.velX;
   // collision detection
   // if the runner would collide with y, set on ground and velY to zero
-  if (runner.y + runner.velY > canvas.height - runner.height) {
-    runner.y = canvas.height - runner.height;
+  if (runner.y + runner.velY > map.height) {
+    runner.y = map.height;
     runner.velY = 0;
     runner.onGround = true;
   } else {
