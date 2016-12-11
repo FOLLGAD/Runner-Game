@@ -1,40 +1,4 @@
-const canvas = document.getElementById('runner'),
-      ctx = canvas.getContext('2d');
-canvas.width = 1000;
-canvas.height = 600;
-let lastDate,
-    gravity = 5,
-    map = {};
-let runner = Runner();
-map.height = 1200;
-
-const images = {};
-images.emil = new Image();
-images.emil.src = "images/emil.png";
-
-document.addEventListener('keydown', KeyHandler);
-document.addEventListener('keyup', KeyHandler);
-
-function KeyHandler(e) {
-  switch (e.code) {
-    case "KeyD":
-    case "ArrowRight":
-      runner.right = e.type === 'keydown' ? true : false;
-      break;
-    case "KeyA":
-    case "ArrowLeft":
-      runner.left = e.type === 'keydown' ? true : false;
-      break;
-    case "KeyW":
-    case "ArrowUp":
-      runner.up = e.type === 'keydown' ? true : false;
-      break;
-    case "KeyS":
-    case "ArrowDown":
-      break;
-      runner.up = e.type === 'keydown' ? true : false;
-  }
-}
+let runner = new Runner();
 
 function Update() {
   let dt = Date.now() - lastDate;
@@ -58,12 +22,12 @@ function Tick() {
     runner.jumpTimer = 0;
   }
   // accelerate towards ground
-  runner.velY += gravity;
+  runner.velY += runner.gravity;
   runner.x += runner.velX;
   // collision detection
   // if the runner would collide with y, set on ground and velY to zero
-  if (runner.y + runner.velY > map.height) {
-    runner.y = map.height;
+  if (runner.y + runner.velY > map.height - runner.height) {
+    runner.y = map.height - runner.height;
     runner.velY = 0;
     runner.onGround = true;
   } else {
@@ -74,19 +38,46 @@ function Tick() {
   runner.velX *= 0.8;
   runner.velY *= 0.95;
 }
-let viewport = {};
+
 function UpdateViewport() {
+  let padding = 30;
+  viewport.height = canvas.height;
+  viewport.width = canvas.width;
   ctx.restore();
   ctx.save();
   viewport.x = runner.x - canvas.width / 2;
   viewport.y = runner.y - canvas.height / 2;
-  viewport.x = viewport.x < 0 ? 0 : viewport.x;
-  viewport.y = viewport.y < 0 ? 0 : viewport.y;
+  viewport.x = viewport.x < 0 - padding ? 0 - padding : viewport.x;
+  viewport.x = viewport.x + viewport.width > map.width + padding ? map.width - viewport.width + padding : viewport.x;
+  viewport.y = viewport.y < 0 - padding ? 0 - padding : viewport.y;
+  viewport.y = viewport.y + viewport.height > map.height + padding ? map.height - viewport.height + padding : viewport.y;
   ctx.translate(-viewport.x, -viewport.y);
+}
+
+function CheckCollision() {
+  let plength = platforms.length;
+  for (let i = 0; i < plength; i++) {
+    if (
+      platform[i].x > Runner.x + Runner.width &&
+      platform[i].x + platform[i].width > Runner.x &&
+      platform[i].y > Runner.y + Runner.height &&
+      platform[i].y + platform[i].height > Runner.y
+    ) {
+
+    } else if (
+      platform[i].x > Runner.x + Runner.width &&
+      platform[i].x + platform[i].width > Runner.x &&
+      platform[i].y > Runner.y + Runner.height &&
+      platform[i].y + platform[i].height > Runner.y
+    ) {
+
+    }
+  }
 }
 
 function Draw () {
   ctx.clearRect(viewport.x, viewport.y, canvas.width, canvas.height);
+  ctx.fillRect(0, map.height, 3000, 10);
   // ctx.drawImage(images.emil, runner.x, runner.y);
   ctx.fillStyle = '#546e7a';
   ctx.fillRect(runner.x, runner.y, runner.width, runner.height);
