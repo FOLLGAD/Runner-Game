@@ -4,24 +4,8 @@ canvas.width = 1000;
 canvas.height = 600;
 let lastDate,
     gravity = 5,
-    runner = {
-      x: 0,
-      y: 0,
-      velX: 0,
-      velY: 0,
-      up: false,
-      down: false,
-      left: false,
-      right: false,
-      hp: 100,
-      width: 32,
-      height: 32,
-      runSpeed: 2,
-      jumpSpeed: 40,
-      jumpTimer: 0,
-      onGround: true
-    };
-let map = {};
+    map = {};
+let runner = Runner();
 map.height = 1200;
 
 const images = {};
