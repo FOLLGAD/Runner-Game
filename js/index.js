@@ -21,22 +21,63 @@ function Tick() {
   } else {
     runner.jumpTimer = 0;
   }
+
+  // Checks collision detection ofc
+  CheckCollision();
+
+  runner.x += runner.velX;
+  runner.y += runner.velY;
+
+
   // accelerate towards ground
   runner.velY += runner.gravity;
-  runner.x += runner.velX;
-  // collision detection
-  // if the runner would collide with y, set on ground and velY to zero
+
+
   if (runner.y + runner.velY > map.height - runner.height) {
     runner.y = map.height - runner.height;
     runner.velY = 0;
     runner.onGround = true;
-  } else {
-    runner.y += runner.velY;
-    runner.onGround = false;
   }
-  // simulate friktion
+  // Simulate friction/airdrag
   runner.velX *= 0.8;
   runner.velY *= 0.95;
+}
+
+function CheckCollision() {
+  let plength = platforms.length;
+  let collision = false;
+  // Iterate through platforms
+  for (let i = 0; i < plength; i++) {
+    // if pos + vel, collide
+    if (
+      platforms[i].x < runner.x + runner.width + runner.velX &&
+      platforms[i].x + platforms[i].width > runner.x + runner.velX &&
+      platforms[i].y < runner.y + runner.height &&
+      platforms[i].y + platforms[i].height > runner.y
+    ) {
+      if (runner.velX < 0)
+        runner.x = platforms[i].x + platforms[i].width;
+      else
+        runner.x = platforms[i].x - runner.width;
+      runner.velX = 0;
+    }
+    if (
+      platforms[i].x < runner.x + runner.width &&
+      platforms[i].x + platforms[i].width > runner.x &&
+      platforms[i].y < runner.y + runner.height + runner.velY &&
+      platforms[i].y + platforms[i].height > runner.y + runner.velY
+    ) {
+      if (runner.velY < 0)
+        runner.y = platforms[i].y + platforms[i].height;
+      else
+        runner.y = platforms[i].y - runner.height;
+      if (runner.velY > 0) {
+        collision = true;
+      }
+      runner.velY = 0;
+    }
+  }
+  runner.onGround = collision;
 }
 
 function UpdateViewport() {
@@ -54,30 +95,12 @@ function UpdateViewport() {
   ctx.translate(-viewport.x, -viewport.y);
 }
 
-function CheckCollision() {
-  let plength = platforms.length;
-  for (let i = 0; i < plength; i++) {
-    if (
-      platform[i].x > Runner.x + Runner.width &&
-      platform[i].x + platform[i].width > Runner.x &&
-      platform[i].y > Runner.y + Runner.height &&
-      platform[i].y + platform[i].height > Runner.y
-    ) {
-
-    } else if (
-      platform[i].x > Runner.x + Runner.width &&
-      platform[i].x + platform[i].width > Runner.x &&
-      platform[i].y > Runner.y + Runner.height &&
-      platform[i].y + platform[i].height > Runner.y
-    ) {
-
-    }
-  }
-}
-
 function Draw () {
   ctx.clearRect(viewport.x, viewport.y, canvas.width, canvas.height);
-  ctx.fillRect(0, map.height, 3000, 10);
+  for (let i = 0; i < platforms.length; i++) {
+    ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+  }
+  ctx.fillRect(0, map.height, 30000, 10);
   // ctx.drawImage(images.emil, runner.x, runner.y);
   ctx.fillStyle = '#546e7a';
   ctx.fillRect(runner.x, runner.y, runner.width, runner.height);

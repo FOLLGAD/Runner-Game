@@ -17,7 +17,11 @@ function KeyHandler(e) {
       break;
     case "KeyS":
     case "ArrowDown":
+      runner.down = e.type === 'keydown' ? true : false;
       break;
-      runner.up = e.type === 'keydown' ? true : false;
+    case "Backquote":
+      if (e.type === 'keydown')
+        platforms.push(new Platform(runner.x, runner.y, 1000, 50));
+      break;
   }
 }

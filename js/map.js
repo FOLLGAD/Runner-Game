@@ -1,3 +1,3 @@
 const map = {};
-map.height = 1200;
+map.height = 2000;
 map.width = 4000;
