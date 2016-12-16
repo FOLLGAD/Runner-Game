@@ -1,15 +1,21 @@
+let runners = [];
 let runner = new Runner();
 
 function Update() {
   let dt = Date.now() - lastDate;
   lastDate = Date.now();
   Tick();
+  UpdateCanvasDimensions();
   UpdateViewport();
   Draw();
   requestAnimationFrame(Update);
 }
 
 function Tick() {
+  runner.Tick();
+  // runners.forEach(function (e) {
+  //   e.Tick();
+  // });
 }
 
 function CheckCollision(object) {
@@ -17,7 +23,7 @@ function CheckCollision(object) {
   let collision = false;
   // Iterate through platforms
   for (let i = 0; i < plength; i++) {
-    // if pos + vel, collide
+    // If pos + vel, collide
     if (
       platforms[i].x < object.x + object.width + object.velX &&
       platforms[i].x + platforms[i].width > object.x + object.velX &&
@@ -66,6 +72,7 @@ function UpdateViewport() {
 
 function Draw () {
   ctx.clearRect(viewport.x, viewport.y, canvas.width, canvas.height);
+  ctx.fillStyle = '#e57373';
   for (let i = 0; i < platforms.length; i++) {
     ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
   }
@@ -73,8 +80,6 @@ function Draw () {
   // ctx.drawImage(images.emil, runner.x, runner.y);
   ctx.fillStyle = '#546e7a';
   ctx.fillRect(runner.x, runner.y, runner.width, runner.height);
-  ctx.fillStyle = '#e57373';
-  ctx.fillRect(canvas.width, canvas.height, 100, 20);
 }
 
 Update();

@@ -1,5 +1,7 @@
 document.addEventListener('keydown', KeyHandler);
 document.addEventListener('keyup', KeyHandler);
+document.addEventListener('mousedown', MouseHandler);
+document.addEventListener('mouseup', MouseHandler);
 
 function KeyHandler(e) {
   switch (e.code) {
@@ -21,7 +23,7 @@ function KeyHandler(e) {
       break;
     case "Backquote":
       if (e.type === 'keydown')
-        platforms.push(new Platform(runner.x, runner.y, 1000, 50));
+        platforms.push(new Platform(runner.x - 500, runner.y + 100, 1000, 50));
       break;
   }
 }

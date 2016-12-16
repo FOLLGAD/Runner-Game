@@ -20,7 +20,7 @@ function Runner() {
   this.gravity = 5;
 
   // Methods
-  this.tick = () => {
+  this.Tick = () => {
     // if right/left & not left/right, move to right/left
     if (this.right && !this.left)
       this.velX += this.runSpeed;
