@@ -6,24 +6,36 @@ document.addEventListener('mouseup', MouseHandler);
 function KeyHandler(e) {
   switch (e.code) {
     case "KeyD":
+      runners[1].right = e.type === 'keydown' ? true : false;
+      break;
     case "ArrowRight":
-      runner.right = e.type === 'keydown' ? true : false;
+      runners[0].right = e.type === 'keydown' ? true : false;
       break;
     case "KeyA":
+      runners[1].left = e.type === 'keydown' ? true : false;
+      break;
     case "ArrowLeft":
-      runner.left = e.type === 'keydown' ? true : false;
+      runners[0].left = e.type === 'keydown' ? true : false;
       break;
     case "KeyW":
+      runners[1].up = e.type === 'keydown' ? true : false;
+      break;
     case "ArrowUp":
-      runner.up = e.type === 'keydown' ? true : false;
+      runners[0].up = e.type === 'keydown' ? true : false;
       break;
     case "KeyS":
+      runners[1].down = e.type === 'keydown' ? true : false;
+      break;
     case "ArrowDown":
-      runner.down = e.type === 'keydown' ? true : false;
+      runners[0].down = e.type === 'keydown' ? true : false;
       break;
     case "Backquote":
       if (e.type === 'keydown')
-        platforms.push(new Platform(runner.x - 500, runner.y + 100, 1000, 50));
+        platforms.push(new Platform(runners[0].x - 500, runners[0].y + 100, 1000, 50));
       break;
   }
+}
+
+function MouseHandler (e) {
+
 }

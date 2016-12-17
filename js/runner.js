@@ -18,6 +18,11 @@ function Runner() {
   this.jumpSpeed = 40;
   this.jumpTimer = 0;
   this.gravity = 5;
+  this.groundFriction = 0.8;
+  this.airFriction = 0.95;
+
+  this.topVelX = 0;
+  this.topVelY = 0;
 
   // Methods
   this.Tick = () => {
@@ -50,7 +55,9 @@ function Runner() {
       this.onGround = true;
     }
     // Simulate friction/airdrag
-    this.velX *= 0.8;
-    this.velY *= 0.95;
-  }
+    this.velX *= this.groundFriction;
+    this.velY *= this.airFriction;
+    this.topVelX = Math.max(this.topVelX, this.velX);
+    this.topVelY = Math.max(this.topVelY, this.velY);
+  };
 }
