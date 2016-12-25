@@ -1,7 +1,7 @@
 document.addEventListener('keydown', KeyHandler);
 document.addEventListener('keyup', KeyHandler);
 document.addEventListener('mousedown', MouseHandler);
-document.addEventListener('mouseup', MouseHandler);
+// document.addEventListener('mouseup', MouseHandler);
 
 function KeyHandler(e) {
   switch (e.code) {
@@ -31,11 +31,13 @@ function KeyHandler(e) {
       break;
     case "Backquote":
       if (e.type === 'keydown')
-        platforms.push(new Platform(runners[0].x - 500, runners[0].y + 100, 1000, 50));
+        SpawnPlatform(runners[0].x - 500, runners[0].y + 100, 1000, 50);
       break;
   }
 }
-
+let bool = false;
 function MouseHandler (e) {
-
+  console.log(e);
+  // bool = !bool;
+  SpawnPlatform(e.offsetX + viewport.x, e.offsetY + viewport.y, 50, 50, bool);
 }

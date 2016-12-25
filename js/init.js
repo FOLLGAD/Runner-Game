@@ -15,7 +15,7 @@ images.emil.src = "public/emil.png";
 function UpdateCanvasDimensions() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-};
+}
 
 function MouseMove(e) {
   mouseX = e.offsetX;

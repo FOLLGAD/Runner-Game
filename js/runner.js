@@ -1,17 +1,14 @@
 function Runner() {
   // States
-  this.x = 0;
-  this.y = 0;
-  this.velX = 0;
-  this.velY = 0;
   this.up = false;
   this.down = false;
   this.left = false;
   this.right = false;
   this.onGround = true;
+  this.topVelX = 0;
+  this.topVelY = 0;
 
   // Settings
-  this.hp = 100;
   this.width = 32;
   this.height = 32;
   this.runSpeed = 2;
@@ -21,10 +18,16 @@ function Runner() {
   this.groundFriction = 0.8;
   this.airFriction = 0.95;
 
-  this.topVelX = 0;
-  this.topVelY = 0;
-
   // Methods
+  this.Respawn = () => {
+    this.x = 0;
+    this.y = 0;
+    this.velX = 0;
+    this.velY = 0;
+    this.hp = 100;
+  };
+  this.Respawn();
+
   this.Tick = () => {
     // if right/left & not left/right, move to right/left
     if (this.right && !this.left)
@@ -39,10 +42,8 @@ function Runner() {
     }
 
     // Checks collision detection ofc
-    CheckCollision(this);
+    this.CheckCollision();
 
-    this.x += this.velX;
-    this.y += this.velY;
 
 
     // accelerate towards ground
@@ -59,5 +60,46 @@ function Runner() {
     this.velY *= this.airFriction;
     this.topVelX = Math.max(this.topVelX, this.velX);
     this.topVelY = Math.max(this.topVelY, this.velY);
+  };
+  this.CheckCollision = () => {
+    this.x += this.velX;
+    this.y += this.velY;
+    let plength = platforms.length,
+        touchedGround = false,
+        colX = false,
+        colY = false;
+
+    for (let i = 0; i < plength; i++) {
+      if (IsCollidingX(this, platforms[i])) {
+        if (this.velX < 0) {
+          this.x = platforms[i].x + platforms[i].width;
+        } else if (this.velX > 0) {
+          this.x = platforms[i].x - this.width;
+        }
+        if (platforms[i].deadly) {
+          this.Respawn();
+        }
+        colX = true;
+      }
+    }
+    for (let i = 0; i < plength; i++) {
+      if (IsCollidingY(this, platforms[i])) {
+        if (this.velY < 0) {
+          this.y = platforms[i].y + platforms[i].height;
+        } else if (this.velY > 0) {
+          this.y = platforms[i].y - this.height;
+          touchedGround = true;
+        }
+        if (platforms[i].deadly) {
+          this.Respawn();
+        }
+        colY = true;
+      }
+    }
+    this.onGround = touchedGround;
+    if (colX)
+      this.velX = 0;
+    if (colY)
+      this.velY = 0;
   };
 }
