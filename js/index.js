@@ -16,23 +16,32 @@ function Tick() {
     runners[i].Tick();
 }
 
+function IsColliding(object, collidee) {
+  return (
+    collidee.x < object.x + object.width &&
+    collidee.x + object.width > object.x &&
+    collidee.y < object.y + object.height &&
+    collidee.y + collidee.height > object.y
+  );
+}
+
 function IsCollidingX(object, titanic, offsetX = 0, offsetY = 0) {
   // If pos + vel, collide
     return (
-      titanic.x < object.x + object.width + offsetX &&
-      titanic.x + titanic.width > object.x + offsetX &&
-      titanic.y < object.y + object.height - object.velY + offsetY &&
-      titanic.y + titanic.height > object.y - object.velY + offsetY
+      titanic.x < object.x + object.width + object.velX + offsetX &&
+      titanic.x + titanic.width > object.x + object.velX + offsetX &&
+      titanic.y < object.y + object.height + offsetY &&
+      titanic.y + titanic.height > object.y + offsetY
     );
 }
 
 function IsCollidingY(object, titanic, offsetX = 0, offsetY = 0) {
   // If pos + vel, collide
   return (
-    titanic.x < object.x + object.width - object.velX + offsetX &&
-    titanic.x + titanic.width > object.x - object.velX + offsetX &&
-    titanic.y < object.y + object.height + offsetY &&
-    titanic.y + titanic.height > object.y + offsetY
+    titanic.x < object.x + object.width + offsetX &&
+    titanic.x + titanic.width > object.x + offsetX &&
+    titanic.y < object.y + object.height + object.velY + offsetY &&
+    titanic.y + titanic.height > object.y + object.velY + offsetY
   );
 }
 

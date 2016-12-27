@@ -4,7 +4,7 @@ function Runner() {
   this.down = false;
   this.left = false;
   this.right = false;
-  this.onGround = true;
+  this.onGround = false;
   this.topVelX = 0;
   this.topVelY = 0;
 
@@ -40,41 +40,37 @@ function Runner() {
     } else {
       this.jumpTimer = 0;
     }
-
     // Checks collision detection ofc
     this.CheckCollision();
-
-
-
     // accelerate towards ground
     this.velY += this.gravity;
-
-
     if (this.y + this.velY > map.height - this.height) {
       this.y = map.height - this.height;
       this.velY = 0;
       this.onGround = true;
     }
-    // Simulate friction/airdrag
+    // Simulate ground friction / air drag
     this.velX *= this.groundFriction;
     this.velY *= this.airFriction;
     this.topVelX = Math.max(this.topVelX, this.velX);
     this.topVelY = Math.max(this.topVelY, this.velY);
   };
   this.CheckCollision = () => {
-    this.x += this.velX;
-    this.y += this.velY;
     let plength = platforms.length,
         touchedGround = false,
         colX = false,
-        colY = false;
+        colY = false,
+        tomoveX = this.x,
+        tomoveY = this.y;
 
     for (let i = 0; i < plength; i++) {
       if (IsCollidingX(this, platforms[i])) {
         if (this.velX < 0) {
-          this.x = platforms[i].x + platforms[i].width;
+          if (!IsColliding({x: platforms[i].x + platforms[i].width, y: this.y, width: this.width, height: this.height}, platforms[i]))
+            tomoveX = Math.abs(tomoveX - this.x) < Math.abs(platforms[i].x + platforms[i].width - this.x) ? platforms[i].x + platforms[i].width : tomoveX;
         } else if (this.velX > 0) {
-          this.x = platforms[i].x - this.width;
+          if (!IsColliding({x: platforms[i].x - this.width, y: this.y, width: this.width, height: this.height}, platforms[i]))
+            tomoveX = Math.abs(tomoveX - this.x) < Math.abs(platforms[i].x - this.width - this.x) ? platforms[i].x - this.width : tomoveX;
         }
         if (platforms[i].deadly) {
           this.Respawn();
@@ -85,10 +81,13 @@ function Runner() {
     for (let i = 0; i < plength; i++) {
       if (IsCollidingY(this, platforms[i])) {
         if (this.velY < 0) {
-          this.y = platforms[i].y + platforms[i].height;
+          if (!IsColliding({x: this.x, y: platforms[i].y + platforms[i].height, width: this.width, height: this.height}, platforms[i]))
+            tomoveY = Math.abs(tomoveY - this.y) < Math.abs(platforms[i].y + platforms[i].height - this.y) ? platforms[i].y + platforms[i].height : tomoveY;
         } else if (this.velY > 0) {
-          this.y = platforms[i].y - this.height;
-          touchedGround = true;
+          if (!IsColliding({x: this.x, y: platforms[i].y - this.height, width: this.width, height: this.height}, platforms[i])) {
+            tomoveY = Math.abs(tomoveY - this.y) < Math.abs(platforms[i].y - this.height - this.y) ? platforms[i].y - this.height : tomoveY;
+            touchedGround = true;
+          }
         }
         if (platforms[i].deadly) {
           this.Respawn();
@@ -97,9 +96,15 @@ function Runner() {
       }
     }
     this.onGround = touchedGround;
+    this.x = tomoveX;
+    this.y = tomoveY;
     if (colX)
       this.velX = 0;
+    else
+      this.x += this.velX;
     if (colY)
       this.velY = 0;
+    else
+      this.y += this.velY;
   };
 }
